@@ -71,7 +71,7 @@ Feature: JSON formatter
     And the output should contain "output['status_counts']['pending']" set to "1"
     And the output should contain the failing feature
       """
-        Scenario:: Failing
+        Scenario: Failing
           Given failing   # features/step_definitions/steps.rb:1
             FAIL (RuntimeError)
             ./features/step_definitions/steps.rb:2:in `/failing/'
@@ -84,7 +84,7 @@ Feature: JSON formatter
     And the output should contain "output['status_counts']['passed']" set to "1"
     And the output should contain the failing feature
       """
-        Scenario:: Failing
+        Scenario: Failing
           Given failing   # features/step_definitions/steps.rb:1
             FAIL (RuntimeError)
             ./features/step_definitions/steps.rb:2:in `/failing/'
@@ -93,7 +93,7 @@ Feature: JSON formatter
       """
     And the output should contain the failing feature
       """
-        Scenario:: Failing2
+        Scenario: Failing2
           Given failing    # features/step_definitions/steps.rb:1
             FAIL (RuntimeError)
             ./features/step_definitions/steps.rb:2:in `/failing/'
@@ -102,7 +102,7 @@ Feature: JSON formatter
       """
     And the output should contain the failing feature
       """
-        Scenario:: Failing3
+        Scenario: Failing3
           Given failing    # features/step_definitions/steps.rb:1
             FAIL (RuntimeError)
             ./features/step_definitions/steps.rb:2:in `/failing/'

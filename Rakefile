@@ -21,8 +21,8 @@ Jeweler::Tasks.new do |gem|
   gem.email = "jnewland@gmail.com"
   gem.homepage = "http://github.com/jnewland/cucumber-json"
   gem.authors = ["Jesse Newland"]
-  gem.add_dependency "cucumber", "~> 0.6.3"
-  gem.add_dependency "json", "~> 1.2.1"
+  gem.add_dependency "cucumber", "~> 0.7.3"
+  gem.add_dependency "json_pure", "~> 1.4.3"
   gem.test_files.include 'features/**/*'
   gem.test_files.exclude 'examples/self_test/tmp/features'
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

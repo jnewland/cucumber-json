@@ -227,10 +227,10 @@ module Cucumber
         end
 
         if status == :passed
-          line = keyword + ' ' + step_match.format_args("%s")
+          line = keyword + step_match.format_args("%s")
           format_string(line, status)
         else
-          line = keyword + ' ' + step_match.format_args("%s") + comment
+          line = keyword + step_match.format_args("%s") + comment
           format_string(line, status)
         end
       end

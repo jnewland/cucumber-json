@@ -48,15 +48,15 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<cucumber>, ["~> 0.6.3"])
-      s.add_runtime_dependency(%q<json>, ["~> 1.2.1"])
+      s.add_runtime_dependency(%q<cucumber>, ["~> 0.7.3"])
+      s.add_runtime_dependency(%q<json_pure>, ["~> 1.4.3"])
     else
-      s.add_dependency(%q<cucumber>, ["~> 0.6.3"])
-      s.add_dependency(%q<json>, ["~> 1.2.1"])
+      s.add_dependency(%q<cucumber>, ["~> 0.7.3"])
+      s.add_dependency(%q<json_pure>, ["~> 1.4.3"])
     end
   else
-    s.add_dependency(%q<cucumber>, ["~> 0.6.3"])
-    s.add_dependency(%q<json>, ["~> 1.2.1"])
+    s.add_dependency(%q<cucumber>, ["~> 0.7.3"])
+    s.add_dependency(%q<json_pure>, ["~> 1.4.3"])
   end
 end
 
