@@ -1,6 +1,7 @@
-Feature: Scout formatter
-  As a Scout user
-  I want to receive reports of failing cucumber features
+Feature: JSON formatter
+  As a developer
+  I want to receive reports of failing cucumber features in a parsable format
+  In order to facilitace elegant continuous integration
   In order to protect revenue
 
   Background:
@@ -63,16 +64,52 @@ Feature: Scout formatter
       """
 
   Scenario: One Failing Feature
-    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/one_failure.feature
-    Then the output should contain "output[:status_counts][:failed]" set to "1"
-    And the output should contain "output[:status_counts][:passed]" set to "1"
-    And the output should contain "output[:status_counts][:undefined]" set to "1"
-    And the output should contain "output[:status_counts][:pending]" set to "1"
-  Scenario: Multiple Failing Features
-    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/multiple_failures.feature
-    Then the output should contain "output[:status_counts][:failed]" set to "3"
-    And the output should contain "output[:status_counts][:passed]" set to "1"
+    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::JSON features/one_failure.feature
+    Then the output should contain "output['status_counts']['failed']" set to "1"
+    And the output should contain "output['status_counts']['passed']" set to "1"
+    And the output should contain "output['status_counts']['undefined']" set to "1"
+    And the output should contain "output['status_counts']['pending']" set to "1"
+    And the output should contain the failing feature
+      """
+        Scenario:: Failing
+          Given failing   # features/step_definitions/steps.rb:1
+            FAIL (RuntimeError)
+            ./features/step_definitions/steps.rb:2:in `/failing/'
+            features/one_failure.feature:4:in `Given failing'
 
+      """
+  Scenario: Multiple Failing Features
+    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::JSON features/multiple_failures.feature
+    Then the output should contain "output['status_counts']['failed']" set to "3"
+    And the output should contain "output['status_counts']['passed']" set to "1"
+    And the output should contain the failing feature
+      """
+        Scenario:: Failing
+          Given failing   # features/step_definitions/steps.rb:1
+            FAIL (RuntimeError)
+            ./features/step_definitions/steps.rb:2:in `/failing/'
+            features/multiple_failures.feature:4:in `Given failing'
+
+      """
+    And the output should contain the failing feature
+      """
+        Scenario:: Failing2
+          Given failing    # features/step_definitions/steps.rb:1
+            FAIL (RuntimeError)
+            ./features/step_definitions/steps.rb:2:in `/failing/'
+            features/multiple_failures.feature:7:in `Given failing'
+
+      """
+    And the output should contain the failing feature
+      """
+        Scenario:: Failing3
+          Given failing    # features/step_definitions/steps.rb:1
+            FAIL (RuntimeError)
+            ./features/step_definitions/steps.rb:2:in `/failing/'
+            features/multiple_failures.feature:10:in `Given failing'
+
+      """
   Scenario: All Features Passing
-    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/all_passing.feature
-    Then the output should contain "output[:status_counts][:passed]" set to "2"
+    When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::JSON features/all_passing.feature
+    Then the output should contain "output['status_counts']['passed']" set to "2"
+    And the output should contain no failing features
