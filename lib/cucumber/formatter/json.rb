@@ -26,14 +26,10 @@ module Cucumber
         @feature = ''
       end
 
-      def feature_name(keyword, name = nil)
-        @feature <<  "#{keyword}: #{name}\n"
-      end
-
       def before_feature_element(feature_element)
         @indent = 2
         @element_exceptions = []
-        @feature_element = ""
+        @feature = ""
         @scenario_indent = 2
       end
 
@@ -61,11 +57,11 @@ module Cucumber
       end
 
       def examples_name(keyword, name)
-        @feature_element <<  "\n" unless @visiting_first_example_name
+        @feature <<  "\n" unless @visiting_first_example_name
         @visiting_first_example_name = false
         names = name.strip.empty? ? [name.strip] : name.split("\n")
-        @feature_element <<  "    #{keyword}: #{names[0]}\n"
-        names[1..-1].each {|s| @feature_element <<  "      #{s}\n" } unless names.empty?
+        @feature <<  "    #{keyword}: #{names[0]}\n"
+        names[1..-1].each {|s| @feature <<  "      #{s}\n" } unless names.empty?
         @indent = 6
         @scenario_indent = 6
       end
@@ -109,16 +105,16 @@ module Cucumber
         return if @hide_this_step
         source_indent = nil unless @options[:source]
         name_to_report = format_step(keyword, step_match, status, source_indent)
-        @feature_element <<  name_to_report.indent(@scenario_indent + 2)
-        @feature_element <<  "\n"
+        @feature <<  name_to_report.indent(@scenario_indent + 2)
+        @feature <<  "\n"
       end
 
       def py_string(string)
         return if @hide_this_step
         s = %{"""\n#{string}\n"""}.indent(@indent)
         s = s.split("\n").map{|l| l =~ /^\s+$/ ? '' : l}.join("\n")
-        @feature_element <<  format_string(s, @current_step.status)
-        @feature_element <<  "\n"
+        @feature <<  format_string(s, @current_step.status)
+        @feature <<  "\n"
       end
 
       def exception(exception, status)
@@ -138,7 +134,7 @@ module Cucumber
       def before_table_row(table_row)
         return if !@table || @hide_this_step
         @col_index = 0
-        @feature_element <<  '  |'.indent(@indent-2)
+        @feature <<  '  |'.indent(@indent-2)
       end
 
       def after_table_cell(cell)
@@ -153,8 +149,8 @@ module Cucumber
         cell_text = value.to_s || ''
         padded = cell_text + (' ' * (width - cell_text.jlength))
         prefix = cell_prefix(status)
-        @feature_element <<  ' ' + format_string("#{prefix}#{padded}", status) + ::Term::ANSIColor.reset(" |")
-        @feature_element <<  "\n"
+        @feature <<  ' ' + format_string("#{prefix}#{padded}", status) + ::Term::ANSIColor.reset(" |")
+        @feature <<  "\n"
       end
 
       # mine
@@ -170,7 +166,7 @@ module Cucumber
         @header_row = false if @header_row
         return if !@table || @hide_this_step
         print_table_row_announcements
-        @feature_element <<  "\n"
+        @feature <<  "\n"
         if table_row.exception && !@exceptions.include?(table_row.exception)
           print_exception(table_row.exception, table_row.status, @indent)
         end
@@ -184,13 +180,13 @@ module Cucumber
       end
 
       def after_feature_element(element)
-        @hash[:feature_elements] ||= []
-        @hash[:feature_elements] << @feature_element
+        @hash[:features] ||= []
+        @hash[:features] << @feature
         @hash[:failing_features] ||= []
         if @element_exceptions.size > 0
-          @hash[:failing_features] << @feature_element
+          @hash[:failing_features] << @feature
         end
-        @feature_element = ''
+        @feature = ''
       end
 
     private
@@ -201,17 +197,17 @@ module Cucumber
       end
 
       def print_feature_element_name(keyword, name, file_colon_line, source_indent)
-        @feature_element <<  "\n" if @scenario_indent == 6
+        @feature <<  "\n" if @scenario_indent == 6
         names = name.empty? ? [name] : name.split("\n")
         line = "#{keyword}: #{names[0]}".indent(@scenario_indent)
-        @feature_element <<  line
-        @feature_element <<  "\n"
-        names[1..-1].each {|s| @feature_element <<  "    #{s}\n"}
+        @feature <<  line
+        @feature <<  "\n"
+        names[1..-1].each {|s| @feature <<  "    #{s}\n"}
       end
 
       def print_exception(e, status, indent)
-        @feature_element <<  format_string("#{e.message} (#{e.class})\n#{e.backtrace.join("\n")}".indent(indent), status)
-        @feature_element <<  "\n"
+        @feature <<  format_string("#{e.message} (#{e.class})\n#{e.backtrace.join("\n")}".indent(indent), status)
+        @feature <<  "\n"
       end
 
       def cell_prefix(status)
@@ -231,10 +227,10 @@ module Cucumber
         end
 
         if status == :passed
-          line = keyword + ' ' + step_match.format_args(nil)
+          line = keyword + ' ' + step_match.format_args("%s")
           format_string(line, status)
         else
-          line = keyword + ' ' + step_match.format_args(nil) + comment
+          line = keyword + ' ' + step_match.format_args("%s") + comment
           format_string(line, status)
         end
       end
@@ -242,3 +238,4 @@ module Cucumber
     end
   end
 end
+require "#{File.dirname(__FILE__)}/json/version"
