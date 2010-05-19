@@ -1,1 +1,3 @@
 examples/self_test/*
+*.gem
+pkg/*
