@@ -64,51 +64,15 @@ Feature: Scout formatter
 
   Scenario: One Failing Feature
     When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/one_failure.feature
-    Then it should fail with
-      """
-      --- 
-      :status_counts: 
-        :passed: 1
-        :failed: 1
-        :missing: 1
-        :pending: 1
-      :failing:
-      - |
-
-        Scenario: Failing
-          Given failing
-
-      """
+    Then the output should contain "output[:status_counts][:failed]" set to "1"
+    And the output should contain "output[:status_counts][:passed]" set to "1"
+    And the output should contain "output[:status_counts][:undefined]" set to "1"
+    And the output should contain "output[:status_counts][:pending]" set to "1"
   Scenario: Multiple Failing Features
     When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/multiple_failures.feature
-    Then it should fail with
-      """
-      --- 
-      :status_counts: 
-        :passed: 1
-        :failed: 3
-      :failing:
-      - |
-
-        Scenario: Failing
-          Given failing
-      - |
-
-        Scenario: Failing2
-          Given failing
-      - |
-
-        Scenario: Failing3
-          Given failing
-      
-      """
+    Then the output should contain "output[:status_counts][:failed]" set to "3"
+    And the output should contain "output[:status_counts][:passed]" set to "1"
 
   Scenario: All Features Passing
     When I run cucumber -r ../../../lib -r features/step_definitions -f Cucumber::Formatter::Scout features/all_passing.feature
-    Then it should pass with
-      """
-      --- 
-      :status_counts: 
-        :passed: 2
-      
-      """
+    Then the output should contain "output[:status_counts][:passed]" set to "2"
